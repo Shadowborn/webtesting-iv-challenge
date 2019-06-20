@@ -22,14 +22,9 @@ async function update(id, changes) {
   return undefined;
 }
 
-function remove(id) {
+function remove(hobbit) {
   return db('hobbits')
-    .remove(hobbit, 'id')
-    .then(ids => {
-      return db('hobbits')
-        .where({ id: ids[0] })
-        .first();
-    });
+  .del(hobbit, 'id');
 }
 
 function getAll() {

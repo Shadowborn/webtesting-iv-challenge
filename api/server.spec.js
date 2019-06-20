@@ -4,7 +4,7 @@ const server = require('./server.js');
 
 const db = require('../data/dbConfig.js');
 
-const { insert } = require('../hobbits/hobbitsModel');
+const { insert, remove } = require('../hobbits/hobbitsModel');
 
 describe('Server test', () => {
 
@@ -46,12 +46,15 @@ describe('Server test', () => {
             expect(hobbits).toHaveLength(2);
           });
     })
-    describe('Can reach DELETE /:id', () => {
+    describe('Can reach DELETE /hobbits', () => {
         // asynchronous test need to either return the promise
-        it('responds with 200 OK', () => {
-            return supertest(server)
-                .delete('/:id')
-                .expect(200);
+        it('Should delete hobbits', async () => {
+            await remove({ name: 'Matt' });
+            await remove({ name: 'Jonathan' });
+      
+            const hobbits = await db('hobbits');
+      
+            expect(hobbits).toHaveLength(0);
         });
     })
 });
