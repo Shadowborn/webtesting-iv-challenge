@@ -2,7 +2,16 @@ const supertest = require('supertest');
 
 const server = require('./server.js');
 
+const db = require('../data/dbConfig.js');
+
+const { insert } = require('../hobbits/hobbitsModel');
+
 describe('Server test', () => {
+
+    beforeEach(async () => {
+        await db('hobbits').truncate();
+      });
+
     describe('Can reach GET /', () => {
         // asynchronous test need to either return the promise
         it('responds with 200 OK', () => {
@@ -28,17 +37,20 @@ describe('Server test', () => {
     })
     describe('Can reach POST /hobbits', () => {
         // asynchronous test need to either return the promise
-        it('responds with 200 OK', () => {
-            return supertest(server)
-                .post('/hobbits')
-                .expect(201);
-        });
+        it('should insert hobbits', async () => {
+            await insert({ name: 'Matt' });
+            await insert({ name: 'Jonathan' });
+      
+            const hobbits = await db('hobbits');
+      
+            expect(hobbits).toHaveLength(2);
+          });
     })
-    describe('Can reach DELETE /hobbits', () => {
+    describe('Can reach DELETE /:id', () => {
         // asynchronous test need to either return the promise
         it('responds with 200 OK', () => {
             return supertest(server)
-                .delete('/hobbits')
+                .delete('/:id')
                 .expect(200);
         });
     })

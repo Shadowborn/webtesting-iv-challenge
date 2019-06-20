@@ -37,5 +37,11 @@ function getAll() {
 }
 
 function findById(id) {
-  return null;
+  return db('hobbits')
+    .findById(hobbit, 'id')
+    .then(ids => {
+      return db('hobbits')
+        .where({ id: ids[0] })
+        .first();
+    });
 }
