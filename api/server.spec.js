@@ -45,6 +45,12 @@ describe('Server test', () => {
       
             expect(hobbits).toHaveLength(2);
           });
+
+          it('Should display 201 success', async () => {
+            await supertest(server)
+                .post('/hobbits')
+                expect(201);
+        });
     })
     describe('Can reach DELETE /hobbits', () => {
         // asynchronous test need to either return the promise
@@ -55,6 +61,14 @@ describe('Server test', () => {
             const hobbits = await db('hobbits');
       
             expect(hobbits).toHaveLength(0);
+            
         });
+        it('Should display 401 Hobbit not found', async () => {
+            await supertest(server)
+                .delete('/:id')
+                .then(res => {
+            expect(res.body).toEqual({ message: 'Hobbit not found' });
+        });
+        })
     })
 });
